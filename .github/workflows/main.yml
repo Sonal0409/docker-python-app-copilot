@@ -1,0 +1,16 @@
+name: Python code CICD
+on: push 
+jobs:
+    cicd:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout the code    
+          uses: actions/checkout@v7
+        - name: Build the dockerfile
+          run: docker build -t myimagepython .
+        - name: Login to Dockerhub
+          run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+        - name: Rename the image
+          run: docker tag myimagepython ${{ secrets.DOCKERHUB_USERNAME }}/myimagepython
+        - name: Push the image to dockerhub
+          run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/myimagepython
